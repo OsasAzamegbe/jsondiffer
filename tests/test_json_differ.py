@@ -7,8 +7,8 @@ import os
 
 valid_json_string = """{"int": 1, "bool": false, "status": "This JSON is valid"}"""
 invalid_json_string = """{"int": 1, "bool": false "status": "This JSON is NOT valid"}"""
-valid_json_path = os.path.abspath("valid_json.json")
-invalid_json_path = os.path.abspath("invalid_json.json")
+valid_json_path = os.path.join(os.path.dirname(__file__) ,"valid_json.json")
+invalid_json_path = os.path.join(os.path.dirname(__file__), "invalid_json.json")
 
 
 @pytest.mark.parametrize(
