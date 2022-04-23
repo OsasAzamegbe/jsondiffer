@@ -23,5 +23,6 @@ class JsonDiffer(object):
     @staticmethod
     def is_valid_json(json_data: Union[str, JsonType], is_file: bool = False) -> bool:
         if is_file:
-            return JsonDiffer._is_json_loadable(json.load, json_data)
+            with open(json_data, 'r') as json_file:
+                return JsonDiffer._is_json_loadable(json.load, json_file)
         return JsonDiffer._is_json_loadable(json.loads, json_data)
