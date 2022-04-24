@@ -13,5 +13,6 @@ class Tokenizer(object):
 
     def insert(self, node: DiffKeyType):
         self.token_list.append(node)
+
     def pop(self):
         self.token_list.pop()
