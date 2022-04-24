@@ -1,4 +1,4 @@
-from src.json_differ import JsonDiffer
+from jsondiffer.json_differ import JsonDiffer
 
 
 if __name__ == "__main__":

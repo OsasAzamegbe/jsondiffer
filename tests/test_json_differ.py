@@ -1,7 +1,7 @@
 from typing import Any
 import pytest
 from typing import Any
-from jsondiffer.src.json_differ import JsonDiffer
+from jsondiffer.json_differ import JsonDiffer
 import os
 
 

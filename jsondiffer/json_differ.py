@@ -1,24 +1,10 @@
-from datetime import datetime
-from typing import Callable, Dict, List
-from dataclasses import dataclass
-from enum import Enum
+from typing import Any, Callable, Dict, List
 import json
 
-
-JsonType = Dict | List
-PrimitiveDataType = str | bool | int | float | datetime | None
-
-
-class DiffEnum(Enum):
-    MISSING_LEFT = 1
-    MISSING_RIGHT = 2
-    MISMATCHED = 3
-
-
-@dataclass
-class Diff(object):
-    diff_type: DiffEnum
-    key: str | int
+from jsondiffer.custom_types import JsonType, DiffKeyType, PrimitiveDataType
+from jsondiffer.diff_enum import DiffEnum
+from jsondiffer.diff import Diff
+from jsondiffer.tokenizer import Tokenizer
 
 
 class JsonDiffer(object):
@@ -54,36 +40,50 @@ class JsonDiffer(object):
         )
 
     def generate_diffs(self):
-        self._diff_node(self.json_a, self.json_b)
+        self._diff_node(self.json_a, self.json_b, Tokenizer())
         print("Diffs generated:", self.diff_list)
 
     def _diff_node(
         self,
         json_a: JsonType | PrimitiveDataType,
         json_b: JsonType | PrimitiveDataType,
-        prev_key: str = "",
+        tokenizer: Tokenizer,
     ):
         if self._is_mismatched(json_a, json_b):
-            self.diff_list.append(Diff(DiffEnum.MISMATCHED, prev_key))
+            self.diff_list.append(Diff(DiffEnum.MISMATCHED, tokenizer.token()))
             return
 
         if isinstance(json_a, dict):
-            longer_iterable = json_b if len(json_a) < len(json_b) else json_a
+            longer_iterable: Dict[str, Any] = (
+                json_b if len(json_a) < len(json_b) else json_a
+            )
             for key in longer_iterable.keys():
+                tokenizer.insert(key)
                 if key not in json_a:
-                    self.diff_list.append(Diff(DiffEnum.MISSING_LEFT, key))
+                    self.diff_list.append(
+                        Diff(DiffEnum.MISSING_LEFT, tokenizer.token())
+                    )
                     continue
                 elif key not in json_b:
-                    self.diff_list.append(Diff(DiffEnum.MISSING_RIGHT, key))
+                    self.diff_list.append(
+                        Diff(DiffEnum.MISSING_RIGHT, tokenizer.token())
+                    )
                     continue
-                self._diff_node(json_a[key], json_b[key], key)
+                self._diff_node(json_a[key], json_b[key], tokenizer)
+                tokenizer.pop()
         elif isinstance(json_a, list):
             larger_len = len(json_b) if len(json_a) < len(json_b) else len(json_a)
             for idx in range(larger_len):
+                tokenizer.insert(idx)
                 if idx >= len(json_a):
-                    self.diff_list.append(Diff(DiffEnum.MISSING_LEFT, idx))
+                    self.diff_list.append(
+                        Diff(DiffEnum.MISSING_LEFT, tokenizer.token())
+                    )
                     continue
                 elif idx >= len(json_b):
-                    self.diff_list.append(Diff(DiffEnum.MISSING_RIGHT, idx))
+                    self.diff_list.append(
+                        Diff(DiffEnum.MISSING_RIGHT, tokenizer.token())
+                    )
                     continue
-                self._diff_node(json_a[idx], json_b[idx], idx)
+                self._diff_node(json_a[idx], json_b[idx], tokenizer)
+                tokenizer.pop()
