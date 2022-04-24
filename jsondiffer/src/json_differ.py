@@ -3,7 +3,6 @@ from typing import Callable, Dict, List
 from dataclasses import dataclass
 from enum import Enum
 import json
-from unittest.mock import NonCallableMagicMock
 
 
 JsonType = Dict | List
