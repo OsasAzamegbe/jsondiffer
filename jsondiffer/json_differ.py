@@ -54,14 +54,20 @@ class JsonDiffer(object):
             return
 
         if isinstance(json_a, dict):
-            longer_iterable: Dict[str, Any] = json_b if len(json_a) < len(json_b) else json_a
+            longer_iterable: Dict[str, Any] = (
+                json_b if len(json_a) < len(json_b) else json_a
+            )
             for key in longer_iterable.keys():
                 tokenizer.insert(key)
                 if key not in json_a:
-                    self.diff_list.append(Diff(DiffEnum.MISSING_LEFT, tokenizer.token()))
+                    self.diff_list.append(
+                        Diff(DiffEnum.MISSING_LEFT, tokenizer.token())
+                    )
                     continue
                 elif key not in json_b:
-                    self.diff_list.append(Diff(DiffEnum.MISSING_RIGHT, tokenizer.token()))
+                    self.diff_list.append(
+                        Diff(DiffEnum.MISSING_RIGHT, tokenizer.token())
+                    )
                     continue
                 self._diff_node(json_a[key], json_b[key], tokenizer)
                 tokenizer.pop()
@@ -70,10 +76,14 @@ class JsonDiffer(object):
             for idx in range(larger_len):
                 tokenizer.insert(idx)
                 if idx >= len(json_a):
-                    self.diff_list.append(Diff(DiffEnum.MISSING_LEFT, tokenizer.token()))
+                    self.diff_list.append(
+                        Diff(DiffEnum.MISSING_LEFT, tokenizer.token())
+                    )
                     continue
                 elif idx >= len(json_b):
-                    self.diff_list.append(Diff(DiffEnum.MISSING_RIGHT, tokenizer.token()))
+                    self.diff_list.append(
+                        Diff(DiffEnum.MISSING_RIGHT, tokenizer.token())
+                    )
                     continue
                 self._diff_node(json_a[idx], json_b[idx], tokenizer)
                 tokenizer.pop()
