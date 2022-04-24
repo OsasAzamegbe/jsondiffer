@@ -3,10 +3,12 @@ from typing import Callable, Dict, List
 from dataclasses import dataclass
 from enum import Enum
 import json
+from unittest.mock import NonCallableMagicMock
 
 
 JsonType = Dict | List
-PrimitiveDataType = str | bool | int | float | datetime | None
+PrimitiveDataType = str | bool | int | float | None
+DiffKeyType = str | int | None
 
 
 class DiffEnum(Enum):
@@ -18,7 +20,7 @@ class DiffEnum(Enum):
 @dataclass
 class Diff(object):
     diff_type: DiffEnum
-    key: str | int
+    key: DiffKeyType
 
 
 class JsonDiffer(object):
@@ -61,7 +63,7 @@ class JsonDiffer(object):
         self,
         json_a: JsonType | PrimitiveDataType,
         json_b: JsonType | PrimitiveDataType,
-        prev_key: str = "",
+        prev_key: DiffKeyType = None,
     ):
         if self._is_mismatched(json_a, json_b):
             self.diff_list.append(Diff(DiffEnum.MISMATCHED, prev_key))
