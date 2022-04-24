@@ -1,12 +1,12 @@
 from datetime import datetime
-from typing import Callable, Union, Dict, List
+from typing import Callable, Dict, List
 from dataclasses import dataclass
 from enum import Enum
 import json
 
 
-JsonType = Union[Dict, List]
-PrimitiveDataType = Union[str, bool, int, float, datetime, None]
+JsonType = Dict | List
+PrimitiveDataType = str | bool | int | float | datetime | None
 
 
 class DiffEnum(Enum):
@@ -18,7 +18,7 @@ class DiffEnum(Enum):
 @dataclass
 class Diff(object):
     diff_type: DiffEnum
-    key: Union[str, int]
+    key: str | int
 
 
 class JsonDiffer(object):
@@ -46,8 +46,8 @@ class JsonDiffer(object):
 
     @staticmethod
     def _is_mismatched(
-        json_a: Union[JsonType, PrimitiveDataType],
-        json_b: Union[JsonType, PrimitiveDataType],
+        json_a: JsonType | PrimitiveDataType,
+        json_b: JsonType | PrimitiveDataType,
     ) -> bool:
         return type(json_a) is not type(json_b) or (
             isinstance(json_a, PrimitiveDataType) and json_a != json_b
@@ -59,8 +59,8 @@ class JsonDiffer(object):
 
     def _diff_node(
         self,
-        json_a: Union[JsonType, PrimitiveDataType],
-        json_b: Union[JsonType, PrimitiveDataType],
+        json_a: JsonType | PrimitiveDataType,
+        json_b: JsonType | PrimitiveDataType,
         prev_key: str = "",
     ):
         if self._is_mismatched(json_a, json_b):
