@@ -1,25 +1,9 @@
-from datetime import datetime
-from typing import Callable, Dict, List
-from dataclasses import dataclass
-from enum import Enum
+from jsondiffer.custom_types import JsonType, DiffKeyType, PrimitiveDataType
+from jsondiffer.diff_enum import DiffEnum
+from jsondiffer.diff import Diff
+
+from typing import Callable, List
 import json
-
-
-JsonType = Dict | List
-PrimitiveDataType = str | bool | int | float | None
-DiffKeyType = str | int | None
-
-
-class DiffEnum(Enum):
-    MISSING_LEFT = 1
-    MISSING_RIGHT = 2
-    MISMATCHED = 3
-
-
-@dataclass
-class Diff(object):
-    diff_type: DiffEnum
-    key: DiffKeyType
 
 
 class JsonDiffer(object):
