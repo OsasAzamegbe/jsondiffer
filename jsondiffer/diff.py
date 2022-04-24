@@ -1,5 +1,5 @@
 from jsondiffer.diff_enum import DiffEnum
-from jsondiffer.custom_types import DiffKeyType
+from jsondiffer.custom_types import TokenType
 
 from dataclasses import dataclass
 
@@ -7,4 +7,4 @@ from dataclasses import dataclass
 @dataclass
 class Diff(object):
     diff_type: DiffEnum
-    key: DiffKeyType
+    token: TokenType
