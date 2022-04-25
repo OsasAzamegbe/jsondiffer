@@ -1,9 +1,8 @@
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict
 import json
 
-from jsondiffer.custom_types import JsonType, DiffKeyType, PrimitiveDataType
+from jsondiffer.custom_types import JsonType, PrimitiveDataType, TokenType
 from jsondiffer.diff_enum import DiffEnum
-from jsondiffer.diff import Diff
 from jsondiffer.tokenizer import Tokenizer
 
 
@@ -11,7 +10,7 @@ class JsonDiffer(object):
     def __init__(self, json_a: JsonType = None, json_b: JsonType = None) -> None:
         self.json_a = json_a if json_a is not None else {}
         self.json_b = json_b if json_b is not None else {}
-        self.diff_list: List[Diff] = []
+        self.diff_store: Dict[TokenType, DiffEnum] = {}
 
     @staticmethod
     def _is_json_loadable(
@@ -41,7 +40,7 @@ class JsonDiffer(object):
 
     def generate_diffs(self):
         self._diff_node(self.json_a, self.json_b, Tokenizer())
-        print("Diffs generated:", self.diff_list)
+        print("Diffs generated:", self.diff_store)
 
     def _diff_node(
         self,
@@ -50,7 +49,7 @@ class JsonDiffer(object):
         tokenizer: Tokenizer,
     ):
         if self._is_mismatched(json_a, json_b):
-            self.diff_list.append(Diff(DiffEnum.MISMATCHED, tokenizer.token()))
+            self.diff_store[tokenizer.token()] = DiffEnum.MISMATCHED
             return
 
         if isinstance(json_a, dict):
@@ -60,14 +59,10 @@ class JsonDiffer(object):
             for key in longer_iterable.keys():
                 tokenizer.insert(key)
                 if key not in json_a:
-                    self.diff_list.append(
-                        Diff(DiffEnum.MISSING_LEFT, tokenizer.token())
-                    )
+                    self.diff_store[tokenizer.token()] = DiffEnum.MISSING_LEFT
                     continue
                 elif key not in json_b:
-                    self.diff_list.append(
-                        Diff(DiffEnum.MISSING_RIGHT, tokenizer.token())
-                    )
+                    self.diff_store[tokenizer.token()] = DiffEnum.MISSING_RIGHT
                     continue
                 self._diff_node(json_a[key], json_b[key], tokenizer)
                 tokenizer.pop()
@@ -76,14 +71,10 @@ class JsonDiffer(object):
             for idx in range(larger_len):
                 tokenizer.insert(idx)
                 if idx >= len(json_a):
-                    self.diff_list.append(
-                        Diff(DiffEnum.MISSING_LEFT, tokenizer.token())
-                    )
+                    self.diff_store[tokenizer.token()] = DiffEnum.MISSING_LEFT
                     continue
                 elif idx >= len(json_b):
-                    self.diff_list.append(
-                        Diff(DiffEnum.MISSING_RIGHT, tokenizer.token())
-                    )
+                    self.diff_store[tokenizer.token()] = DiffEnum.MISSING_RIGHT
                     continue
                 self._diff_node(json_a[idx], json_b[idx], tokenizer)
                 tokenizer.pop()
