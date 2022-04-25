@@ -6,7 +6,7 @@ from typing import Any
 from jsondiffer.json_differ import JsonDiffer
 import os
 
-#test static methods
+# test static methods
 valid_json_string = """{"int": 1, "bool": false, "status": "This JSON is valid"}"""
 invalid_json_string = """{"int": 1, "bool": false "status": "This JSON is NOT valid"}"""
 valid_json_path = os.path.join(os.path.dirname(__file__), "valid_json.json")
