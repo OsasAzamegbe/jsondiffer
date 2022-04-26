@@ -8,11 +8,15 @@ from jsondiffer.tokenizer import Tokenizer
 
 
 class JsonDiffer(object):
-    def __init__(self, json_a: JsonType, json_b: JsonType, diff_printer: DiffPrinter = None) -> None:
+    def __init__(
+        self, json_a: JsonType, json_b: JsonType, diff_printer: DiffPrinter = None
+    ) -> None:
         self.json_a = json_a if json_a is not None else {}
         self.json_b = json_b if json_b is not None else {}
         self.diff_store: DffStoreType = {}
-        self.diff_printer = diff_printer if diff_printer is not None else DiffPrinter()
+        self.diff_printer = (
+            diff_printer if diff_printer is not None else DiffPrinter(json_a, json_b)
+        )
 
     @staticmethod
     def _is_json_loadable(
