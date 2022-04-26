@@ -6,7 +6,7 @@ from jsondiffer.custom_types import DiffKeyType, TokenType
 
 @dataclass
 class Tokenizer(object):
-    token_list: List = field(default_factory=list)
+    token_list: List[DiffKeyType] = field(default_factory=list)
 
     def token(self) -> TokenType:
         return tuple(self.token_list)
