@@ -7,7 +7,7 @@ from jsondiffer.tokenizer import Tokenizer
 
 
 class JsonDiffer(object):
-    def __init__(self, json_a: JsonType = None, json_b: JsonType = None) -> None:
+    def __init__(self, json_a: JsonType, json_b: JsonType) -> None:
         self.json_a = json_a if json_a is not None else {}
         self.json_b = json_b if json_b is not None else {}
         self.diff_store: Dict[TokenType, DiffEnum] = {}
@@ -40,7 +40,6 @@ class JsonDiffer(object):
 
     def generate_diffs(self):
         self._diff_node(self.json_a, self.json_b, Tokenizer())
-        print("Diffs generated:", self.diff_store)
 
     def _diff_node(
         self,
