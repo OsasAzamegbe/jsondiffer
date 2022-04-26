@@ -1,10 +1,11 @@
-import json
-from typing import Any, Callable
+from typing import Any
 from unittest.mock import Mock
 import pytest
-from typing import Any
-from jsondiffer.json_differ import JsonDiffer
 import os
+from jsondiffer.custom_types import JsonType, TokenType
+
+from jsondiffer.diff_enum import DiffEnum
+from jsondiffer.json_differ import JsonDiffer
 
 # test static methods
 valid_json_string = """{"int": 1, "bool": false, "status": "This JSON is valid"}"""
@@ -67,3 +68,73 @@ def test_is_json_loadable_returns_false():
 )
 def test_is_mismatched(json_a, json_b, expected: bool):
     assert JsonDiffer._is_mismatched(json_a, json_b) == expected
+
+
+@pytest.mark.parametrize(
+    "json_a,json_b,expected_diff_key,expected_diff",
+    [
+        ({"first": 1}, {"first": 1}, None, None),
+        (
+            {"first": [1, {"second": "test"}]},
+            {"first": [1, {"second": "test"}]},
+            None,
+            None,
+        ),
+        (
+            {"first": 1, "second": {"third": False}},
+            {"first": 1, "second": {"third": False}},
+            None,
+            None,
+        ),
+        ({"first": 1}, {"first": 2}, ("first",), DiffEnum.MISMATCHED),
+        (
+            {"first": [1, {"second": "test"}]},
+            {"first": [1, {"second": "not test"}]},
+            ("first", 1, "second"),
+            DiffEnum.MISMATCHED,
+        ),
+        (
+            {"first": [1, {"second": []}]},
+            {"first": [1, {"second": {}}]},
+            ("first", 1, "second"),
+            DiffEnum.MISMATCHED,
+        ),
+        (
+            {"first": 1, "second": {"third": False}},
+            {"first": 1, "second": {"third": True}},
+            (
+                "second",
+                "third",
+            ),
+            DiffEnum.MISMATCHED,
+        ),
+        ({"first": 1}, {}, ("first",), DiffEnum.MISSING_RIGHT),
+        ({}, {"first": 1}, ("first",), DiffEnum.MISSING_LEFT),
+        (
+            {"first": 1, "second": ["a", "b", "c", [1, 2, 3, 4]]},
+            {"first": 1, "second": ["a", "b", "c"]},
+            ("second", 3),
+            DiffEnum.MISSING_RIGHT,
+        ),
+        (
+            {"first": 1, "second": ["a", "b", "c"]},
+            {"first": 1, "second": ["a", "b", "c", [1, 2, 3, 4]]},
+            ("second", 3),
+            DiffEnum.MISSING_LEFT,
+        ),
+    ],
+)
+def test_generate_diffs(
+    json_a: JsonType,
+    json_b: JsonType,
+    expected_diff_key: TokenType,
+    expected_diff: DiffEnum,
+):
+    differ = JsonDiffer(json_a, json_b)
+    differ.generate_diffs()
+
+    if expected_diff_key:
+        assert expected_diff_key in differ.diff_store
+        assert expected_diff == differ.diff_store.get(expected_diff_key)
+    else:
+        assert len(differ.diff_store) == 0
