@@ -1,5 +1,19 @@
 {
     "int": 1,
     "bool": false,
-    "status": "This JSON is valid"
+    "status": "This JSON is valid",
+    "list": [
+        1,
+        2,
+        3,
+        {
+            "test": "testing boy"
+        },
+        [
+            "wagwan",
+            {
+                "fancy": false
+            }
+        ]
+    ]
 }

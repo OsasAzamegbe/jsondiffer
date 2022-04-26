@@ -1,5 +1,6 @@
 import argparse
 import json
+from jsondiffer.cli_diff_printer import CliDiffPrinter
 
 from jsondiffer.json_differ import JsonDiffer
 
@@ -20,8 +21,9 @@ if __name__ == "__main__":
     json_a = json.loads(json_bytes_a)
     json_b = json.loads(json_bytes_b)
 
-    differ = JsonDiffer(json_a, json_b)
+    differ = JsonDiffer(json_a, json_b, CliDiffPrinter(json_a, json_b))
     differ.generate_diffs()
+    differ.print()
 
     args.json_file_1.close()
     args.json_file_2.close()

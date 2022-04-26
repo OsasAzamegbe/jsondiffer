@@ -1,16 +1,18 @@
 from typing import Any, Callable, Dict
 import json
 
-from jsondiffer.custom_types import JsonType, PrimitiveDataType, TokenType
+from jsondiffer.custom_types import DffStoreType, JsonType, PrimitiveDataType
 from jsondiffer.diff_enum import DiffEnum
+from jsondiffer.diff_printer import DiffPrinter
 from jsondiffer.tokenizer import Tokenizer
 
 
 class JsonDiffer(object):
-    def __init__(self, json_a: JsonType, json_b: JsonType) -> None:
+    def __init__(self, json_a: JsonType, json_b: JsonType, diff_printer: DiffPrinter = None) -> None:
         self.json_a = json_a if json_a is not None else {}
         self.json_b = json_b if json_b is not None else {}
-        self.diff_store: Dict[TokenType, DiffEnum] = {}
+        self.diff_store: DffStoreType = {}
+        self.diff_printer = diff_printer if diff_printer is not None else DiffPrinter()
 
     @staticmethod
     def _is_json_loadable(
@@ -77,3 +79,6 @@ class JsonDiffer(object):
                     continue
                 self._diff_node(json_a[idx], json_b[idx], tokenizer)
                 tokenizer.pop()
+
+    def print(self):
+        self.diff_printer.print(self.diff_store)
