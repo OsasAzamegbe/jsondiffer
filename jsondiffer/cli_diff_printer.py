@@ -4,64 +4,63 @@ from jsondiffer.tokenizer import Tokenizer
 
 ADDITION_PREFIX = "+"
 SUBTRACTION_PREFIX = "-"
+INDENTATION = "    "
+INDENTATION_SIZE = len(INDENTATION)
 
 
 class CliDiffPrinter(DiffPrinter):
     @staticmethod
-    def _print_to_cli(padding: str, *args, prefix: str = " ", **kwargs):
-        print(prefix, padding, *args, **kwargs)
+    def _print_to_cli(
+        padding: str, *args, prefix: str = "", new_line: bool = False, **kwargs
+    ):
+        if new_line:
+            prefix = "\n" + prefix
+        print(prefix + padding, *args, end="", **kwargs)
 
     def _print_json_node_to_cli(
         self,
-        json_a: JsonType,
-        json_b: JsonType,
+        json_a: JsonType | PrimitiveDataType,
+        json_b: JsonType | PrimitiveDataType,
         tokenizer: Tokenizer,
         padding: str = "",
-        print_opening_bracket: bool = False,
     ):
-        if isinstance(json_a, dict):
-            if print_opening_bracket:
-                self._print_to_cli(padding, "{")
-            padding += "\t"
+        if isinstance(json_a, PrimitiveDataType):
+            if isinstance(json_a, str):
+                json_a = f'"{json_a}"'
+            elif isinstance(json_a, bool):
+                json_a = "true" if json_a else "false"
+            elif json_a is None:
+                json_a = "null"
+            self._print_to_cli("", json_a)
+        elif isinstance(json_a, dict):
+            self._print_to_cli("", "{")
+            padding += INDENTATION
+            not_last_key = len(json_a)
             for key, value in json_a.items():
                 tokenizer.insert(key)
-
-                if isinstance(value, PrimitiveDataType):
-                    if isinstance(value, str):
-                        value = f'"{value}"'
-                    elif isinstance(value, bool):
-                        value = "true" if value else "false"
-                    elif value is None:
-                        value = "null"
-                    self._print_to_cli(padding, f'"{key}": {value},')
-                else:
-                    bracket = "{" if isinstance(value, dict) else "["
-                    self._print_to_cli(padding, f'"{key}":', bracket)
-                    self._print_json_node_to_cli(
-                        value, json_b.get(key), tokenizer, padding
-                    )
+                not_last_key -= 1
+                self._print_to_cli(padding, f'"{key}":', new_line=True)
+                self._print_json_node_to_cli(value, json_b.get(key), tokenizer, padding)
+                if not_last_key:
+                    self._print_to_cli(",")
                 tokenizer.pop()
-            padding = padding[:-1]
-            self._print_to_cli(padding, "}")
-
+            padding = padding[:-INDENTATION_SIZE]
+            self._print_to_cli(padding, "}", new_line=True)
         elif isinstance(json_a, list):
-            if print_opening_bracket:
-                self._print_to_cli(padding, "[")
-            padding += "\t"
+            self._print_to_cli("", "[")
+            padding += INDENTATION
+            not_last_key = len(json_a)
             for idx, value in enumerate(json_a):
                 tokenizer.insert(idx)
-                if isinstance(value, PrimitiveDataType):
-                    self._print_to_cli(padding, f"{value},")
-                else:
-                    bracket = "{" if isinstance(value, dict) else "["
-                    self._print_to_cli(padding, bracket)
-                    self._print_json_node_to_cli(value, json_b[idx], tokenizer, padding)
+                not_last_key -= 1
+                self._print_to_cli(padding, new_line=True)
+                self._print_json_node_to_cli(value, json_b[idx], tokenizer, padding)
+                if not_last_key:
+                    self._print_to_cli(",")
                 tokenizer.pop()
-            padding[:-1]
-            self._print_to_cli(padding, "]")
+            padding = padding[:-INDENTATION_SIZE]
+            self._print_to_cli(padding, "]", new_line=True)
 
     def print(self, diff_store: DffStoreType):
         self.diff_store = diff_store
-        self._print_json_node_to_cli(
-            self.json_a, self.json_b, Tokenizer(), print_opening_bracket=True
-        )
+        self._print_json_node_to_cli(self.json_a, self.json_b, Tokenizer())
