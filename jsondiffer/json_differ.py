@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict
 import json
 
-from jsondiffer.custom_types import DffStoreType, JsonType, PrimitiveDataType
+from jsondiffer.custom_types import DiffStoreType, JsonType, PrimitiveDataType
 from jsondiffer.diff_enum import DiffEnum
 from jsondiffer.diff_printer import DiffPrinter
 from jsondiffer.tokenizer import Tokenizer
@@ -13,7 +13,7 @@ class JsonDiffer(object):
     ) -> None:
         self.json_a = json_a if json_a is not None else {}
         self.json_b = json_b if json_b is not None else {}
-        self.diff_store: DffStoreType = {}
+        self.diff_store: DiffStoreType = {}
         self.diff_printer = (
             diff_printer if diff_printer is not None else DiffPrinter(json_a, json_b)
         )

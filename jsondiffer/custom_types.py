@@ -6,4 +6,4 @@ JsonType = Dict | List
 PrimitiveDataType = str | bool | int | float | None
 DiffKeyType = str | int
 TokenType = Tuple[DiffKeyType]
-DffStoreType = Dict[TokenType, DiffEnum]
+DiffStoreType = Dict[TokenType, DiffEnum]
