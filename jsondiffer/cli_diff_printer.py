@@ -71,7 +71,7 @@ class CliDiffPrinter(DiffPrinter):
                         self._print_dict_key_value_to_cli(
                             key,
                             value,
-                            json_a[key],
+                            value,
                             tokenizer,
                             ADDITION_PREFIX + padding[:-1],
                             not_last_key,
@@ -86,11 +86,31 @@ class CliDiffPrinter(DiffPrinter):
                             not_last_key,
                             color=FAIL_COLOR,
                         )
+                    elif self.diff_store[token] == DiffEnum.MISSING_LEFT:
+                        self._print_dict_key_value_to_cli(
+                            key,
+                            json_b[key],
+                            json_b[key],
+                            tokenizer,
+                            SUBTRACTION_PREFIX + padding[:-1],
+                            not_last_key,
+                            color=FAIL_COLOR,
+                        )
+                    if self.diff_store[token] == DiffEnum.MISSING_RIGHT:
+                        self._print_dict_key_value_to_cli(
+                            key,
+                            value,
+                            value,
+                            tokenizer,
+                            ADDITION_PREFIX + padding[:-1],
+                            not_last_key,
+                            color=OK_COLOR,
+                        )
                 else:
                     self._print_dict_key_value_to_cli(
                         key,
                         value,
-                        json_b.get(key),
+                        json_b[key],
                         tokenizer,
                         padding,
                         not_last_key,

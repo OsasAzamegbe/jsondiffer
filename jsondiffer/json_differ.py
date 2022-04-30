@@ -65,9 +65,11 @@ class JsonDiffer(object):
                 tokenizer.insert(key)
                 if key not in json_a:
                     self.diff_store[tokenizer.token()] = DiffEnum.MISSING_LEFT
+                    tokenizer.pop()
                     continue
                 elif key not in json_b:
                     self.diff_store[tokenizer.token()] = DiffEnum.MISSING_RIGHT
+                    tokenizer.pop()
                     continue
                 self._diff_node(json_a[key], json_b[key], tokenizer)
                 tokenizer.pop()
@@ -77,9 +79,11 @@ class JsonDiffer(object):
                 tokenizer.insert(idx)
                 if idx >= len(json_a):
                     self.diff_store[tokenizer.token()] = DiffEnum.MISSING_LEFT
+                    tokenizer.pop()
                     continue
                 elif idx >= len(json_b):
                     self.diff_store[tokenizer.token()] = DiffEnum.MISSING_RIGHT
+                    tokenizer.pop()
                     continue
                 self._diff_node(json_a[idx], json_b[idx], tokenizer)
                 tokenizer.pop()
