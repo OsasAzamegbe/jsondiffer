@@ -27,7 +27,7 @@ class CliDiffPrinter(DiffPrinter):
             prefix = "\n" + prefix
         print(color + prefix + padding, *args, end="", **kwargs)
 
-    def _print_dict_key_value_to_cli(
+    def _output_dict_key_value_pair_to_stdout(
         self,
         key: str,
         value: JsonType | PrimitiveDataType,
@@ -38,11 +38,13 @@ class CliDiffPrinter(DiffPrinter):
         color: str = NORMAL_COLOR,
     ):
         self._print_to_cli(padding, f'"{key}":', new_line=True, color=color)
-        self._print_json_node_to_cli(value, json_b, tokenizer, padding, color=color)
+        self._output_json_and_diffs_to_stdout(
+            value, json_b, tokenizer, padding, color=color
+        )
         if not_last_key:
             self._print_to_cli(",", color=color)
 
-    def _print_json_node_to_cli(
+    def _output_json_and_diffs_to_stdout(
         self,
         json_a: JsonType | PrimitiveDataType,
         json_b: JsonType | PrimitiveDataType,
@@ -69,7 +71,7 @@ class CliDiffPrinter(DiffPrinter):
                 if token in self.diff_store:
                     self._print_to_cli("", new_line=True)
                     if self.diff_store[token] == DiffEnum.MISMATCHED:
-                        self._print_dict_key_value_to_cli(
+                        self._output_dict_key_value_pair_to_stdout(
                             key,
                             value,
                             value,
@@ -78,7 +80,7 @@ class CliDiffPrinter(DiffPrinter):
                             not_last_key,
                             color=OK_COLOR,
                         )
-                        self._print_dict_key_value_to_cli(
+                        self._output_dict_key_value_pair_to_stdout(
                             key,
                             json_b[key],
                             json_b[key],
@@ -88,7 +90,7 @@ class CliDiffPrinter(DiffPrinter):
                             color=FAIL_COLOR,
                         )
                     elif self.diff_store[token] == DiffEnum.MISSING_LEFT:
-                        self._print_dict_key_value_to_cli(
+                        self._output_dict_key_value_pair_to_stdout(
                             key,
                             json_b[key],
                             json_b[key],
@@ -98,7 +100,7 @@ class CliDiffPrinter(DiffPrinter):
                             color=FAIL_COLOR,
                         )
                     if self.diff_store[token] == DiffEnum.MISSING_RIGHT:
-                        self._print_dict_key_value_to_cli(
+                        self._output_dict_key_value_pair_to_stdout(
                             key,
                             value,
                             value,
@@ -109,7 +111,7 @@ class CliDiffPrinter(DiffPrinter):
                         )
                     self._print_to_cli("", new_line=True)
                 else:
-                    self._print_dict_key_value_to_cli(
+                    self._output_dict_key_value_pair_to_stdout(
                         key,
                         value,
                         json_b[key],
@@ -129,7 +131,7 @@ class CliDiffPrinter(DiffPrinter):
                 tokenizer.insert(idx)
                 not_last_key -= 1
                 self._print_to_cli(padding, new_line=True, color=color)
-                self._print_json_node_to_cli(
+                self._output_json_and_diffs_to_stdout(
                     value, json_b[idx], tokenizer, padding, color=color
                 )
                 if not_last_key:
@@ -140,4 +142,4 @@ class CliDiffPrinter(DiffPrinter):
 
     def print(self, diff_store: DiffStoreType):
         self.diff_store = diff_store
-        self._print_json_node_to_cli(self.json_a, self.json_b, Tokenizer())
+        self._output_json_and_diffs_to_stdout(self.json_a, self.json_b, Tokenizer())
