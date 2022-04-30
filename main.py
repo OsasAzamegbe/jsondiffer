@@ -7,8 +7,12 @@ from jsondiffer.json_differ import JsonDiffer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("JSON_FILE_1", type=argparse.FileType("rb"), help="First JSON file")
-    parser.add_argument("JSON_FILE_2", type=argparse.FileType("rb"), help="Second JSON file")
+    parser.add_argument(
+        "JSON_FILE_1", type=argparse.FileType("rb"), help="First JSON file"
+    )
+    parser.add_argument(
+        "JSON_FILE_2", type=argparse.FileType("rb"), help="Second JSON file"
+    )
     args = parser.parse_args()
     json_bytes_a = args.JSON_FILE_1.read()
     json_bytes_b = args.JSON_FILE_2.read()
