@@ -30,14 +30,14 @@
   <p align="center">
     A diffing tool for JSON.
     <br />
-    <a href="https://github.com/OsasAzamegbe/http-server#readme"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/OsasAzamegbe/jsondiffer#readme"><strong>Explore the docs »</strong></a>
     <br />
     <br />
 <!--     <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a> -->
 <!--     · -->
-    <a href="https://github.com/OsasAzamegbe/http-server/issues">Report Bug</a>
+    <a href="https://github.com/OsasAzamegbe/jsondiffer/issues">Report Bug</a>
     ·
-    <a href="https://github.com/OsasAzamegbe/http-server/issues">Request Feature</a>
+    <a href="https://github.com/OsasAzamegbe/jsondiffer/issues">Request Feature</a>
   </p>
 </div>
 
@@ -107,7 +107,7 @@ You will need to have docker setup on your computer, which can be done fairly ea
 2. navigate to your desired project directory
 3. Clone the repo
    ```sh
-   git clone https://github.com/OsasAzamegbe/http-server.git
+   git clone https://github.com/OsasAzamegbe/jsondiffer.git
    ```
    (if you do not have git installed, take a brief detour and follow these [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)).
 4. navigate to the project folder *__jsondiffer/__* and create a virtual environment.
@@ -140,7 +140,7 @@ With docker fully setup on your system:
 1. navigate to your desired project directory
 2. Clone the repo
    ```sh
-   git clone https://github.com/OsasAzamegbe/http-server.git
+   git clone https://github.com/OsasAzamegbe/jsondiffer.git
    ```
    (if you do not have git installed, take a brief detour and follow these [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)).
 3. navigate to the project folder *__jsondiffer/__* and build the docker image
@@ -209,7 +209,7 @@ Distributed under the MIT License. See [LICENSE](https://github.com/OsasAzamegbe
 </br>[Medium](https://medium.com/@osas.azamegbe) 
 </br>[osas.azamegbe@gmail.com](mailto:osas.azamegbe@gmail.com)
 
-Project Link: [https://github.com/OsasAzamegbe/http-server](https://github.com/OsasAzamegbe/http-server)
+Project Link: [https://github.com/OsasAzamegbe/jsondiffer](https://github.com/OsasAzamegbe/jsondiffer)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
