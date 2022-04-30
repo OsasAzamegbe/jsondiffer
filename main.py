@@ -7,11 +7,15 @@ from jsondiffer.json_differ import JsonDiffer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("json_file_1", type=argparse.FileType("rb"))
-    parser.add_argument("json_file_2", type=argparse.FileType("rb"))
+    parser.add_argument(
+        "JSON_FILE_1", type=argparse.FileType("rb"), help="First JSON file"
+    )
+    parser.add_argument(
+        "JSON_FILE_2", type=argparse.FileType("rb"), help="Second JSON file"
+    )
     args = parser.parse_args()
-    json_bytes_a = args.json_file_1.read()
-    json_bytes_b = args.json_file_2.read()
+    json_bytes_a = args.JSON_FILE_1.read()
+    json_bytes_b = args.JSON_FILE_2.read()
 
     if not JsonDiffer.is_valid_json(json_bytes_a) or not JsonDiffer.is_valid_json(
         json_bytes_b
@@ -25,5 +29,5 @@ if __name__ == "__main__":
     differ.generate_diffs()
     differ.print()
 
-    args.json_file_1.close()
-    args.json_file_2.close()
+    args.JSON_FILE_1.close()
+    args.JSON_FILE_2.close()
