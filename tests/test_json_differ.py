@@ -124,6 +124,120 @@ def test_is_mismatched(json_a, json_b, expected: bool):
             (("second", 3),),
             (DiffEnum.MISSING_LEFT,),
         ),
+        (
+            {"first": 10, "second": ["a", "b", "c"]},
+            {"first": 1, "second": ["a", "b", "c", [1, 2, 3, 4]]},
+            (
+                ("first",),
+                ("second", 3),
+            ),
+            (
+                DiffEnum.MISMATCHED,
+                DiffEnum.MISSING_LEFT,
+            ),
+        ),
+        (
+            {"second": ["a", "b", "c"], "third": False},
+            {"second": ["a", "b", "c", [1, 2, 3, 4]], "third": True},
+            (
+                ("second", 3),
+                ("third",),
+            ),
+            (
+                DiffEnum.MISSING_LEFT,
+                DiffEnum.MISMATCHED,
+            ),
+        ),
+        (
+            {"first": 10, "second": ["a", "b", "c", [1, 2, 3, 4]]},
+            {"first": 1, "second": ["a", "b", "c"]},
+            (
+                ("first",),
+                ("second", 3),
+            ),
+            (
+                DiffEnum.MISMATCHED,
+                DiffEnum.MISSING_RIGHT,
+            ),
+        ),
+        (
+            {"second": ["a", "b", "c", [1, 2, 3, 4]], "third": False},
+            {"second": ["a", "b", "c"], "third": True},
+            (
+                ("second", 3),
+                ("third",),
+            ),
+            (
+                DiffEnum.MISSING_RIGHT,
+                DiffEnum.MISMATCHED,
+            ),
+        ),
+        (
+            {"second": ["a", "b", "c", [1, 2, 3, 4]]},
+            {"first": 1, "second": ["a", "b", "c"]},
+            (
+                ("first",),
+                ("second", 3),
+            ),
+            (
+                DiffEnum.MISSING_LEFT,
+                DiffEnum.MISSING_RIGHT,
+            ),
+        ),
+        (
+            {"second": ["a", "b", "c", [1, 2, 3, 4]]},
+            {"second": ["a", "b", "c"], "third": False},
+            (
+                ("second", 3),
+                ("third",),
+            ),
+            (
+                DiffEnum.MISSING_RIGHT,
+                DiffEnum.MISSING_LEFT,
+            ),
+        ),
+        (
+            {"null": None, "second": ["a", "b", "c", [1, 2, 3, 4]]},
+            {"null": {}, "first": 1, "second": ["a", "b", "c"]},
+            (
+                ("null",),
+                ("first",),
+                ("second", 3),
+            ),
+            (
+                DiffEnum.MISMATCHED,
+                DiffEnum.MISSING_LEFT,
+                DiffEnum.MISSING_RIGHT,
+            ),
+        ),
+        (
+            {"second": ["a", "b", "c", [1, 2, 3, 4]], "null": {}},
+            {"second": ["a", "b", "c"], "null": None, "third": False},
+            (
+                ("second", 3),
+                ("null",),
+                ("third",),
+            ),
+            (
+                DiffEnum.MISSING_RIGHT,
+                DiffEnum.MISMATCHED,
+                DiffEnum.MISSING_LEFT,
+            ),
+        ),
+        (
+            {"second": ["a", "b", "c", [1, 2, 3, 4]], "null": []},
+            {"second": ["a", "b", "c"], "third": False, "null": None},
+            (
+                ("second", 3),
+                ("third",),
+                ("null",),
+            ),
+            (
+                DiffEnum.MISSING_RIGHT,
+                DiffEnum.MISSING_LEFT,
+                DiffEnum.MISMATCHED,
+            ),
+        ),
     ],
 )
 def test_generate_diffs(
@@ -141,3 +255,6 @@ def test_generate_diffs(
             assert expected_diff == differ.diff_store.get(expected_diff_key)
         else:
             assert len(differ.diff_store) == 0
+            return
+
+    assert len(differ.diff_store) == len(expected_diffs) == len(expected_diff_keys)
