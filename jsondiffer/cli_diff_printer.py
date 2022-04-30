@@ -67,6 +67,7 @@ class CliDiffPrinter(DiffPrinter):
                 not_last_key -= 1
                 token = tokenizer.token()
                 if token in self.diff_store:
+                    self._print_to_cli("", new_line=True)
                     if self.diff_store[token] == DiffEnum.MISMATCHED:
                         self._print_dict_key_value_to_cli(
                             key,
@@ -106,6 +107,7 @@ class CliDiffPrinter(DiffPrinter):
                             not_last_key,
                             color=OK_COLOR,
                         )
+                    self._print_to_cli("", new_line=True)
                 else:
                     self._print_dict_key_value_to_cli(
                         key,
