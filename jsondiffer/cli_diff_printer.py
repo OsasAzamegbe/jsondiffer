@@ -1,4 +1,5 @@
-from pyparsing import col
+from typing import List
+
 from jsondiffer.custom_types import DiffStoreType, JsonType, PrimitiveDataType
 from jsondiffer.diff_enum import DiffEnum
 from jsondiffer.diff_printer import DiffPrinter
@@ -44,6 +45,26 @@ class CliDiffPrinter(DiffPrinter):
         if not_last_key:
             self._print_to_cli(",", color=color)
 
+    def _output_list_value_to_stdout(
+        self,
+        json_a_value: JsonType | PrimitiveDataType,
+        json_b_value: JsonType | PrimitiveDataType,
+        tokenizer: Tokenizer,
+        padding: str,
+        not_last_key: int,
+        color: str = NORMAL_COLOR,
+    ):
+        self._print_to_cli(padding, new_line=True, color=color)
+        self._output_json_and_diffs_to_stdout(
+            json_a_value,
+            json_b_value,
+            tokenizer,
+            padding,
+            color=color,
+        )
+        if not_last_key:
+            self._print_to_cli(",", color=color)
+
     def _output_json_and_diffs_to_stdout(
         self,
         json_a: JsonType | PrimitiveDataType,
@@ -63,8 +84,11 @@ class CliDiffPrinter(DiffPrinter):
         elif isinstance(json_a, dict):
             self._print_to_cli("", "{", color=color)
             padding += INDENTATION
-            not_last_key = len(json_a)
-            for key, value in json_a.items():
+
+            keys_set: List[str] = list(json_a.keys())
+            keys_set.extend(key for key in json_b.keys() if key not in json_a)
+            not_last_key = len(keys_set)
+            for key in keys_set:
                 tokenizer.insert(key)
                 not_last_key -= 1
                 token = tokenizer.token()
@@ -73,8 +97,8 @@ class CliDiffPrinter(DiffPrinter):
                     if self.diff_store[token] == DiffEnum.MISMATCHED:
                         self._output_dict_key_value_pair_to_stdout(
                             key,
-                            value,
-                            value,
+                            json_a[key],
+                            json_a[key],
                             tokenizer,
                             ADDITION_PREFIX + padding[:-1],
                             not_last_key,
@@ -99,11 +123,11 @@ class CliDiffPrinter(DiffPrinter):
                             not_last_key,
                             color=FAIL_COLOR,
                         )
-                    if self.diff_store[token] == DiffEnum.MISSING_RIGHT:
+                    elif self.diff_store[token] == DiffEnum.MISSING_RIGHT:
                         self._output_dict_key_value_pair_to_stdout(
                             key,
-                            value,
-                            value,
+                            json_a[key],
+                            json_a[key],
                             tokenizer,
                             ADDITION_PREFIX + padding[:-1],
                             not_last_key,
@@ -113,7 +137,7 @@ class CliDiffPrinter(DiffPrinter):
                 else:
                     self._output_dict_key_value_pair_to_stdout(
                         key,
-                        value,
+                        json_a[key],
                         json_b[key],
                         tokenizer,
                         padding,
@@ -126,16 +150,63 @@ class CliDiffPrinter(DiffPrinter):
         elif isinstance(json_a, list):
             self._print_to_cli("", "[", color=color)
             padding += INDENTATION
-            not_last_key = len(json_a)
-            for idx, value in enumerate(json_a):
+
+            larger_len = len(json_b) if len(json_a) < len(json_b) else len(json_a)
+            not_last_key = larger_len
+            for idx in range(larger_len):
                 tokenizer.insert(idx)
                 not_last_key -= 1
-                self._print_to_cli(padding, new_line=True, color=color)
-                self._output_json_and_diffs_to_stdout(
-                    value, json_b[idx], tokenizer, padding, color=color
-                )
-                if not_last_key:
-                    self._print_to_cli(",", color=color)
+                json_a_value = json_a[idx] if idx < len(json_a) else json_b[idx]
+                json_b_value = json_b[idx] if idx < len(json_b) else json_a[idx]
+
+                token = tokenizer.token()
+                if token in self.diff_store:
+                    self._print_to_cli("", new_line=True)
+                    if self.diff_store[token] == DiffEnum.MISMATCHED:
+                        self._output_list_value_to_stdout(
+                            json_a_value,
+                            json_b_value,
+                            tokenizer,
+                            ADDITION_PREFIX + padding[:-1],
+                            not_last_key,
+                            color=OK_COLOR,
+                        )
+                        self._output_list_value_to_stdout(
+                            json_b_value,
+                            json_a_value,
+                            tokenizer,
+                            SUBTRACTION_PREFIX + padding[:-1],
+                            not_last_key,
+                            color=FAIL_COLOR,
+                        )
+                    elif self.diff_store[token] == DiffEnum.MISSING_LEFT:
+                        self._output_list_value_to_stdout(
+                            json_b_value,
+                            json_a_value,
+                            tokenizer,
+                            SUBTRACTION_PREFIX + padding[:-1],
+                            not_last_key,
+                            color=FAIL_COLOR,
+                        )
+                    elif self.diff_store[token] == DiffEnum.MISSING_RIGHT:
+                        self._output_list_value_to_stdout(
+                            json_a_value,
+                            json_b_value,
+                            tokenizer,
+                            ADDITION_PREFIX + padding[:-1],
+                            not_last_key,
+                            color=OK_COLOR,
+                        )
+                    self._print_to_cli("", new_line=True)
+                else:
+                    self._output_list_value_to_stdout(
+                        json_a_value,
+                        json_b_value,
+                        tokenizer,
+                        padding,
+                        not_last_key,
+                        color=color,
+                    )
                 tokenizer.pop()
             padding = padding[:-INDENTATION_SIZE]
             self._print_to_cli(padding, "]", new_line=True, color=color)
