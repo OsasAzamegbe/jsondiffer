@@ -197,6 +197,38 @@ def test_is_mismatched(json_a, json_b, expected: bool):
             ),
         ),
         (
+            {"second": ["a", "b", "c", [1, 2, 3, 4]]},
+            {"second": ["a", "c"], "third": False},
+            (
+                ("second", 1),
+                ("second", 2),
+                ("second", 3),
+                ("third",),
+            ),
+            (
+                DiffEnum.MISMATCHED,
+                DiffEnum.MISSING_RIGHT,
+                DiffEnum.MISSING_RIGHT,
+                DiffEnum.MISSING_LEFT,
+            ),
+        ),
+        (
+            {"second": ["a", "b", "c", [1, 2, 3, 4]], "fourth": 10, "fifth": "5"},
+            {"second": ["a", "b", "c"], "third": False},
+            (
+                ("second", 3),
+                ("third",),
+                ("fourth",),
+                ("fifth",),
+            ),
+            (
+                DiffEnum.MISSING_RIGHT,
+                DiffEnum.MISSING_LEFT,
+                DiffEnum.MISSING_RIGHT,
+                DiffEnum.MISSING_RIGHT,
+            ),
+        ),
+        (
             {"null": None, "second": ["a", "b", "c", [1, 2, 3, 4]]},
             {"null": {}, "first": 1, "second": ["a", "b", "c"]},
             (

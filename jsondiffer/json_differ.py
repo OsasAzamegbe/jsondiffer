@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Set
 import json
 
 from jsondiffer.custom_types import DiffStoreType, JsonType, PrimitiveDataType
@@ -58,10 +58,8 @@ class JsonDiffer(object):
             return
 
         if isinstance(json_a, dict):
-            longer_iterable: Dict[str, Any] = (
-                json_b if len(json_a) < len(json_b) else json_a
-            )
-            for key in longer_iterable.keys():
+            keys_set: Set[str] = json_a.keys() | json_b.keys()
+            for key in keys_set:
                 tokenizer.insert(key)
                 if key not in json_a:
                     self.diff_store[tokenizer.token()] = DiffEnum.MISSING_LEFT
