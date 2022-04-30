@@ -164,7 +164,7 @@ class CliDiffPrinter(DiffPrinter):
                 if self.diff_store[token] == DiffEnum.MISMATCHED:
                     self._output_list_value_to_stdout(
                         json_a_value,
-                        json_b_value,
+                        json_a_value,
                         tokenizer,
                         ADDITION_PREFIX + padding[:-1],
                         not_last_key,
@@ -172,7 +172,7 @@ class CliDiffPrinter(DiffPrinter):
                     )
                     self._output_list_value_to_stdout(
                         json_b_value,
-                        json_a_value,
+                        json_b_value,
                         tokenizer,
                         SUBTRACTION_PREFIX + padding[:-1],
                         not_last_key,
@@ -181,7 +181,7 @@ class CliDiffPrinter(DiffPrinter):
                 elif self.diff_store[token] == DiffEnum.MISSING_LEFT:
                     self._output_list_value_to_stdout(
                         json_b_value,
-                        json_a_value,
+                        json_b_value,
                         tokenizer,
                         SUBTRACTION_PREFIX + padding[:-1],
                         not_last_key,
@@ -190,7 +190,7 @@ class CliDiffPrinter(DiffPrinter):
                 elif self.diff_store[token] == DiffEnum.MISSING_RIGHT:
                     self._output_list_value_to_stdout(
                         json_a_value,
-                        json_b_value,
+                        json_a_value,
                         tokenizer,
                         ADDITION_PREFIX + padding[:-1],
                         not_last_key,
