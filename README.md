@@ -58,6 +58,8 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#building-and-running">Building and Running</a></li>
+        <li><a href="#local-development">Local Development</a></li>
+        <li><a href="#debian-package">Debian Package</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -134,7 +136,12 @@ You will need to have docker setup on your computer, which can be done fairly ea
    ```sh
    python -m pytest
    ```
-##### Local development
+7. You can now also run the program via the `main.py` file
+   ```sh
+   python jsondiffer/main.py --help
+   ```
+
+#### Local Development
 With docker fully setup on your system:
 
 1. navigate to your desired project directory
@@ -149,18 +156,40 @@ With docker fully setup on your system:
    ```
 4. run the tests with
    ```sh
-   docker-compose run --rm dev python -m pytest
+   docker-compose run --rm dev python3 -m pytest
    ```
 you can also run a bash terminal (and hack away as you please) with
 ```sh
 docker-compose run --rm dev bash
 ```
+
+### Debian Package
+
+If you're not on a system with Debian support, you can follow the steps in <a href="#local-development">Local Development</a> to get a bash terminal from the Docker setup of this project before continuing below.
+
+From your terminal window;
+1. build your debian package with fpm
+   ```sh
+   fpm --python-bin python3 --python-package-name-prefix python3 -s python -t deb .
+   ```
+2. running ` ls ` should show a .deb file generated for this project
+3. install the deb file generated from the previous step
+   ```sh
+   dpkg -i python3-jsondiffer_<versiontag>_all.deb
+   ```
+4. you now have the binary installed on your terminal and you can execute it with
+   ```sh
+   jsdiff --help
+   ```
+
+   Happy hacking! 😀
+
  </br></br>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-From an open terminal go through the steps detailed in *<a href="#building-and-running">Building and running</a>*
+From an open terminal go through the steps detailed in <a href="#building-and-running">Building and Running</a>
 
 1. navigate to the directory with the **main.py** file
 2. run the jsondiffer program with
@@ -170,6 +199,15 @@ From an open terminal go through the steps detailed in *<a href="#building-and-r
    for more help information, run
    ```sh
    python main.py [-h|--help]
+   ```
+
+If you have the debian package installed by following <a href="#debian-package">Debian Package</a>, you can use `jsdiff` to run the program, instead of `python main.py`
+   ```sh
+   jsdiff <path/to/first/json/file> <path/to/second/json/file>
+   ```
+   for more help information, run
+   ```sh
+   jsdiff [-h|--help]
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
