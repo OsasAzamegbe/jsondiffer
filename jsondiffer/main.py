@@ -4,6 +4,7 @@ from jsondiffer.cli_diff_printer import CliDiffPrinter
 
 from jsondiffer.json_differ import JsonDiffer
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -30,6 +31,7 @@ def main():
 
     args.JSON_FILE_1.close()
     args.JSON_FILE_2.close()
+
 
 if __name__ == "__main__":
     main()
