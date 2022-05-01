@@ -112,7 +112,12 @@ You will need to have docker setup on your computer, which can be done fairly ea
    git clone https://github.com/OsasAzamegbe/jsondiffer.git
    ```
    (if you do not have git installed, take a brief detour and follow these [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)).
-4. navigate to the project folder *__jsondiffer/__* and create a virtual environment.
+4. navigate to the project folder *__jsondiffer/__* 
+   ```sh
+   cd jsondiffer/
+   ```
+5. create a virtual environment.
+   </br></br>
    Linux/MacOs
    ```sh
    pip install virtualenv && python3.10 -m venv venv && ./venv/bin/activate
@@ -128,29 +133,24 @@ You will need to have docker setup on your computer, which can be done fairly ea
    .\venv\Scripts\activate
    ```
    
-5. install the required dev packages from the principal directory
+6. install the required dev packages from the principal directory
    ```sh
    pip install -r requirements-dev.txt
    ```
-6. once your virtual environment is up and running and you have your packages installed, you can run the tests with
+7. once your virtual environment is up and running and you have your packages installed, you can run the tests with
    ```sh
    python -m pytest
    ```
-7. You can now also run the program via the `main.py` file
+8. You can now also run the program via the `main.py` file
    ```sh
    python jsondiffer/main.py --help
    ```
 
-#### Local Development
+### Local Development
 With docker fully setup on your system:
 
-1. navigate to your desired project directory
-2. Clone the repo
-   ```sh
-   git clone https://github.com/OsasAzamegbe/jsondiffer.git
-   ```
-   (if you do not have git installed, take a brief detour and follow these [instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)).
-3. navigate to the project folder *__jsondiffer/__* and build the docker image
+1. Follow **steps 2 - 4** from the <a href="#building-and-running">Building and Running</a> directions.
+3. build the docker image
    ```sh
    docker-compose build
    ```
@@ -158,10 +158,10 @@ With docker fully setup on your system:
    ```sh
    docker-compose run --rm dev python3 -m pytest
    ```
-you can also run a bash terminal (and hack away as you please) with
-```sh
-docker-compose run --rm dev bash
-```
+5. you can also run a bash terminal (and hack away as you please) with
+   ```sh
+   docker-compose run --rm dev bash
+   ```
 
 ### Debian Package
 
