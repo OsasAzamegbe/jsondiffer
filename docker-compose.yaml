@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  dev:
+    image: osasazamegbe/amd64linux:latest
+    build: .
+    volumes:
+      - .:/usr/src/jsondiffer
+    command: "bash"
