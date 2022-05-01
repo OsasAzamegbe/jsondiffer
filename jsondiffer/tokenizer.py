@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from jsondiffer.jsondiffer.custom_types import DiffKeyType, TokenType
+from jsondiffer.custom_types import DiffKeyType, TokenType
 
 
 @dataclass
