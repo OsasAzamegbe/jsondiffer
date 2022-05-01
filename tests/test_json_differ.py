@@ -2,8 +2,8 @@ from typing import Any, Tuple
 from unittest.mock import Mock
 import pytest
 import os
-from jsondiffer.custom_types import JsonType, TokenType
 
+from jsondiffer.custom_types import JsonType, TokenType
 from jsondiffer.diff_enum import DiffEnum
 from jsondiffer.json_differ import JsonDiffer
 

@@ -5,7 +5,7 @@ from jsondiffer.cli_diff_printer import CliDiffPrinter
 from jsondiffer.json_differ import JsonDiffer
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "JSON_FILE_1", type=argparse.FileType("rb"), help="First JSON file"
@@ -31,3 +31,7 @@ if __name__ == "__main__":
 
     args.JSON_FILE_1.close()
     args.JSON_FILE_2.close()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,6 +1,10 @@
 from typing import Dict, List
 
-from jsondiffer.custom_types import DiffStoreType, JsonType, PrimitiveDataType
+from jsondiffer.custom_types import (
+    DiffStoreType,
+    JsonType,
+    PrimitiveDataType,
+)
 from jsondiffer.diff_enum import DiffEnum
 from jsondiffer.diff_printer import DiffPrinter
 from jsondiffer.tokenizer import Tokenizer
