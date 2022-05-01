@@ -13,6 +13,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Osamudiamen Emmanuel Azamegbe",
     author_email="osas.azamegbe@gmail.com",
+    url="https://github.com/OsasAzamegbe/jsondiffer",
     license="MIT",
     packages=find_packages(exclude=["tests"]),
     classifiers=[
@@ -21,7 +22,7 @@ setup(
         "Environment :: Console",
         "Operating System :: POSIX :: Linux",
     ],
-    entry_points={"console_scripts": ["jsdiff=jsondiffer.main"]},
+    entry_points={"console_scripts": ["jsdiff=jsondiffer.main:main"]},
     keywords=["json", "differ", "difftool", "diff", "json diff", "diffing"],
     python_requires=">=3.10",
 )
