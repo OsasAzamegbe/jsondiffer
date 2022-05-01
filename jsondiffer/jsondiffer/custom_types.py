@@ -1,6 +1,6 @@
 from typing import Dict, List, Tuple
 
-from jsondiffer.diff_enum import DiffEnum
+from jsondiffer.jsondiffer.diff_enum import DiffEnum
 
 JsonType = Dict | List
 PrimitiveDataType = str | bool | int | float | None

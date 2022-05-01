@@ -1,8 +1,8 @@
 from typing import List
 import pytest
 
-from jsondiffer.custom_types import DiffKeyType, TokenType
-from jsondiffer.tokenizer import Tokenizer
+from jsondiffer.jsondiffer.custom_types import DiffKeyType, TokenType
+from jsondiffer.jsondiffer.tokenizer import Tokenizer
 
 
 @pytest.mark.parametrize(

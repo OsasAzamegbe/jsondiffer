@@ -1,10 +1,10 @@
 from typing import Any, Callable, Set
 import json
 
-from jsondiffer.custom_types import DiffStoreType, JsonType, PrimitiveDataType
-from jsondiffer.diff_enum import DiffEnum
-from jsondiffer.diff_printer import DiffPrinter
-from jsondiffer.tokenizer import Tokenizer
+from jsondiffer.jsondiffer.custom_types import DiffStoreType, JsonType, PrimitiveDataType
+from jsondiffer.jsondiffer.diff_enum import DiffEnum
+from jsondiffer.jsondiffer.diff_printer import DiffPrinter
+from jsondiffer.jsondiffer.tokenizer import Tokenizer
 
 
 class JsonDiffer(object):

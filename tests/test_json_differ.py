@@ -2,10 +2,10 @@ from typing import Any, Tuple
 from unittest.mock import Mock
 import pytest
 import os
-from jsondiffer.custom_types import JsonType, TokenType
+from jsondiffer.jsondiffer.custom_types import JsonType, TokenType
 
-from jsondiffer.diff_enum import DiffEnum
-from jsondiffer.json_differ import JsonDiffer
+from jsondiffer.jsondiffer.diff_enum import DiffEnum
+from jsondiffer.jsondiffer.json_differ import JsonDiffer
 
 # test static methods
 valid_json_string = """{"int": 1, "bool": false, "status": "This JSON is valid"}"""

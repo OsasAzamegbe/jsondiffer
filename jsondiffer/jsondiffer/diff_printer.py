@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from dataclasses import dataclass
 
-from jsondiffer.custom_types import JsonType
+from jsondiffer.jsondiffer.custom_types import JsonType
 
 
 @dataclass
